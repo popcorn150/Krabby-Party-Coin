@@ -5,3 +5,49 @@
 .top-glow {
     box-shadow: 0 -26px 20px rgba(243, 186, 47, 0.3);
 }
+
+/* Define the keyframes for the blinking animation */
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Apply the animation to the dot class */
+.dot {
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    animation: blink 1s infinite;
+}
+
+.circle-outer {
+    background: linear-gradient(to bottom, #dfb220, #452a09);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90vw;
+    height: 90vw;
+    max-width: 360px;
+    max-height: 360px;
+}
+
+.circle-inner {
+    background: linear-gradient(to bottom, #ddc122, #2e2e12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 1px rgb(0, 0, 0, 0.2);
+}

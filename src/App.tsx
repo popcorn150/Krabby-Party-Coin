@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import SpongeBob from "./icons/SpongeBob";
-import { binanceLogo, krabbyPartties } from "./images";
+import { binanceLogo, dailyCipher, dailyCombo, dailyReward, krabbyPartties, mainCharacter, spongeBob } from "./images";
 import Info from "./icons/Info";
 import Settings from "./icons/Settings";
 
@@ -35,7 +35,62 @@ function App() {
 
   const [levelIndex, setLevelIndex] = useState(6);
   const [points, setPoints] = useState(22749365);
+  const [clicks, setClicks] = useState<{ id: number, x: number, y: number }[]>
+    ([]);
+  const pointsToAdd = 11;
   const profitPerHour = 192045;
+
+  const [dailRewardTimeLeft, setDailyRewardTimeLeft] = useState("")
+  const [dailyCipherTimeLeft, setdailyCipherTimeLeft] = useState("")
+  const [dailComboTimeLeft, setDailyComboTimeLeft] = useState("")
+
+  const calculateTimeLeft = (targetHour: number) => {
+    const now = new Date();
+    const target = new Date(now);
+    target.setUTCHours(targetHour, 0, 0, 0);
+
+    if (now.getUTCHours() >= targetHour) {
+      target.setUTCDate(target.getUTCDate() + 1);
+    }
+
+    const diff = target.getTime() - now.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    const paddedHours = hours.toString().padStart(2, '0');
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+
+    return `${paddedHours}:${paddedMinutes}`;
+  };
+
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${-x / 10}deg)`;
+    setTimeout(() => {
+      card.style.transform = '';
+    }, 1000);
+
+    setPoints(points + pointsToAdd);
+    setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
+  };
+
+  useEffect(() => {
+    const updateCountDowns = () => {
+      setDailyRewardTimeLeft(calculateTimeLeft(0));
+      setdailyCipherTimeLeft(calculateTimeLeft(19));
+      setDailyComboTimeLeft(calculateTimeLeft(12));
+    };
+
+    updateCountDowns();
+    const interval = setInterval(updateCountDowns, 60000); // update every minute
+
+    return () => clearInterval(interval);
+  }, []);
+
+
 
   const calculateProgress = () => {
     if (levelIndex >= levelNames.length - 1) {
@@ -96,14 +151,59 @@ function App() {
                 <div className="flex items-center justify-center space-x-1">
                   <img src={krabbyPartties} alt="Krabby Patties" className="w-[25px] h-[25px]" />
                   <p className="text-sm">{formatProfitPerHour(profitPerHour)}</p>
-                  <Info size={20} className="text-[#43433b]"/>
+                  <Info size={20} className="text-[#43433b]" />
                 </div>
               </div>
-              <Settings className="text-white"/>
+              <Settings className="text-white" />
             </div>
           </div>
         </div>
-        <div className="flex-grow mt-4 bg-[#f3ba2f] rounded-t-[48px] relative top-glow z-0"></div>
+        <div className="flex-grow mt-4 bg-[#f3ba2f] rounded-t-[48px] relative top-glow z-0">
+          <div className="absolute top-[2px] left-0 right-0 bottom-0 bg-[#1d2025] rounded-t-[46px]">
+            <div className="px-4 mt-6 flex justify-between gap-2">
+              <div className="bg-[#272a2f] rounded-lg px-4 py-2 w-full relative">
+                <div className="dot"></div>
+                <img src={dailyReward} alt="Daily Reward" className="mx-auto w-12 h-12" />
+                <p className="text-[10px] text-center text-white mt-1">Daily reward</p>
+                <p className="text-[10px] font-medium text-center text-gray-400 mt-2">
+                  {dailRewardTimeLeft}
+                </p>
+              </div>
+              <div className="bg-[#272a2f] rounded-lg px-4 py-2 w-full relative">
+                <div className="dot"></div>
+                <img src={dailyCipher} alt="Daily Reward" className="mx-auto w-12 h-12" />
+                <p className="text-[10px] text-center text-white mt-1">Daily cipher</p>
+                <p className="text-[10px] font-medium text-center text-gray-400 mt-2">
+                  {dailRewardTimeLeft}
+                </p>
+              </div>
+              <div className="bg-[#272a2f] rounded-lg px-4 py-2 w-full relative">
+                <div className="dot"></div>
+                <img src={dailyCombo} alt="Daily Reward" className="mx-auto w-12 h-12" />
+                <p className="text-[10px] text-center text-white mt-1">Daily combo</p>
+                <p className="text-[10px] font-medium text-center text-gray-400 mt-2">
+                  {dailRewardTimeLeft}
+                </p>
+              </div>
+            </div>
+            <div className="px-4 mt-4 flex justify-center">
+              <div className="px-4 py-2 flex items-center space-x-2">
+                <img src={krabbyPartties} alt="Krabby Parties" className="w-12 h-12" />
+                <p className="text-4xl text-white">{points.toLocaleString()}</p>
+              </div>
+            </div>
+            <div className="px-4 mt-4 flex justify-center">
+              <div className="w-80 h-80 p-4 rounded-full circle-outer"
+                onClick={handleCardClick}>
+                <div className="w-full h-full rounded-full circle-inner">
+                  <img src={spongeBob} alt="Main Character" className="w-full h-full" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className=""></div>
       </div>
     </div>
   );
