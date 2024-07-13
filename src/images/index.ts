@@ -7,7 +7,8 @@ import dailyCombo from "./daily-combo.png";
 import mainCharacter from "./main-character.png";
 import hamsterCoin from "./hamster-coin.png";
 import krabbyPartties from "./krabby-patties.png";
-import spongeBob from "./spongebob.png";
+import spongeBob from "./spongeBob.png";
+import spongeBobCoin from "./spongebob-coin.png";
 
 export {
     hamsterExchange,
@@ -19,5 +20,6 @@ export {
     mainCharacter,
     hamsterCoin,
     krabbyPartties,
-    spongeBob
+    spongeBob,
+    spongeBobCoin
 };

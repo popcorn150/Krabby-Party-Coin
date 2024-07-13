@@ -51,3 +51,15 @@
     justify-content: center;
     box-shadow: 0 1px 1px rgb(0, 0, 0, 0.2);
 }
+
+@keyframes float {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}

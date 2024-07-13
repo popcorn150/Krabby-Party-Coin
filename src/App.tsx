@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import SpongeBob from "./icons/SpongeBob";
-import { binanceLogo, dailyCipher, dailyCombo, dailyReward, krabbyPartties, mainCharacter, spongeBob } from "./images";
+import { binanceLogo, dailyCipher, dailyCombo, dailyReward, krabbyPartties, spongeBob, hamsterCoin, spongeBobCoin } from "./images";
 import Info from "./icons/Info";
 import Settings from "./icons/Settings";
+import Mine from "./icons/Mine";
+import Friends from "./icons/Friends";
+import Coins from "./icons/Coins";
 
 function App() {
 
@@ -77,6 +80,10 @@ function App() {
     setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
   };
 
+  const handleAnimationEnd = (id: number) => {
+    setClicks((prevClicks) => prevClicks.filter(click => click.id !== id));
+  };
+
   useEffect(() => {
     const updateCountDowns = () => {
       setDailyRewardTimeLeft(calculateTimeLeft(0));
@@ -107,7 +114,25 @@ function App() {
     if (profit >= 1000000) return `+${(profit / 1000000).toFixed(2)}M`;
     if (profit >= 1000) return `+${(profit / 1000).toFixed(2)}K`;
     return `+${profit}`;
-  }
+  };
+
+  useEffect(() => {
+    const currenLevelMin = levelMinPoints[levelIndex];
+    const nextLevelMin = levelMinPoints[levelIndex + 1];
+    if (points >= nextLevelMin && levelIndex < levelNames.length - 1) {
+      setLevelIndex(levelIndex + 1);
+    }else if (points < currenLevelMin && levelIndex > 0) {
+        setLevelIndex(levelIndex - 1);
+      }
+  }, [points, levelIndex, levelMinPoints, levelNames.length]);
+
+  useEffect(() => {
+    const pointsPerSecond = Math.floor(profitPerHour / 3600);
+    const interval = setInterval(() => {
+      setPoints(prevPoints => prevPoints + pointsPerSecond);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [profitPerHour]);
 
   return (
     <div className="bg-black flex justify-center">
@@ -203,7 +228,47 @@ function App() {
           </div>
         </div>
 
-        <div className=""></div>
+        <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 
+          w-[calc(100%-2rem)] max-w-xl bg-[#272a2f] 
+          flex justify-around items-center z-50 rounded-3xl text-xs">
+          <div className="text-center text-[#85827d] w-1/5 
+          bg-[#1c1f24] m-1 p-2 rounded-2xl">
+            <img src={binanceLogo} alt="Binance Logo" className="w-8 h-8 mx-auto" />
+            <p className="mt-1">Exchange</p>
+          </div>
+          <div className="text-center text-[#85827d] w-1/5">
+            <Mine className="w-8 h-8 mx-auto" />
+            <p className="mt-1">Mine</p>
+          </div>
+          <div className="text-center text-[#85827d] w-1/5">
+            <Friends className="w-8 h-8 mx-auto" />
+            <p className="mt-1">Friends</p>
+          </div>
+          <div className="text-center text-[#85827d] w-1/5">
+            <Coins className="w-8 h-8 mx-auto" />
+            <p className="mt-1">Earn</p>
+          </div>
+          <div className="text-center text-[#85827d] w-1/5">
+            <img src={hamsterCoin} alt="Airdrop" className="w-8 h-8 mx-auto" />
+            <p className="mt-1">Airdrop</p>
+          </div>
+        </div>
+
+        {clicks.map((click) => (
+          <div
+            key={click.id}
+            className="absolute text-5xl font-bold opacity-0 text-white 
+          pointer-events-none"
+            style={{
+              top: `${click.y - 42}px`,
+              left: `${click.x - 28}px`,
+              animation: `float 1s ease-out`
+            }}
+            onAnimationEnd={() => handleAnimationEnd(click.id)}
+          >
+            {pointsToAdd}
+          </div>
+        ))}
       </div>
     </div>
   );
