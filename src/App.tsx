@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import SpongeBob from "./icons/SpongeBob";
-import { binanceLogo, dailyCipher, dailyCombo, dailyReward, krabbyPartties, spongeBob, hamsterCoin, spongeBobCoin } from "./images";
+import { binanceLogo, dailyCipher, dailyCombo, dailyReward, krabbyPartties, spongeBob, hamsterCoin } from "./images";
 import Info from "./icons/Info";
 import Settings from "./icons/Settings";
 import Mine from "./icons/Mine";
@@ -199,7 +199,7 @@ function App() {
                 <img src={dailyCipher} alt="Daily Reward" className="mx-auto w-12 h-12" />
                 <p className="text-[10px] text-center text-white mt-1">Daily cipher</p>
                 <p className="text-[10px] font-medium text-center text-gray-400 mt-2">
-                  {dailRewardTimeLeft}
+                  {dailyCipherTimeLeft}
                 </p>
               </div>
               <div className="bg-[#272a2f] rounded-lg px-4 py-2 w-full relative">
@@ -207,7 +207,7 @@ function App() {
                 <img src={dailyCombo} alt="Daily Reward" className="mx-auto w-12 h-12" />
                 <p className="text-[10px] text-center text-white mt-1">Daily combo</p>
                 <p className="text-[10px] font-medium text-center text-gray-400 mt-2">
-                  {dailRewardTimeLeft}
+                  {dailComboTimeLeft}
                 </p>
               </div>
             </div>
